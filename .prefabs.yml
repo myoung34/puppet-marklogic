@@ -1,0 +1,21 @@
+---
+'centos-64-x64-ml-yum':
+  facts:
+    kernelrelease: "2.6.32-358.el6.x86_64"
+    operatingsystem: CentOS
+    kernelmajversion: "2.6"
+    architecture: x86_64
+    facterversion: "1.6.18"
+    kernelversion: "2.6.32"
+    operatingsystemrelease: "6.4"
+    osfamily: RedHat
+    lsbmajdistrelease: "6"
+    lsbdistcodename: Final
+    lsbdistdescription: "CentOS release 6.4 (Final)"
+    lsbdistid: CentOS
+    lsbdistrelease: "6.4"
+    kernel: Linux
+    rubyversion: "1.8.7"
+  provider_specifics:
+    vagrant_virtualbox:
+      box: 'centos-64-x64-ml-yum'

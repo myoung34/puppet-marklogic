@@ -1,0 +1,5 @@
+pkg/
+.tmp/
+pkg/
+spec/fixtures/
+.rspec_system/
