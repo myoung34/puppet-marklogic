@@ -1,5 +1,5 @@
 name         'myoung34-marklogic'
-version      '0.0.1'
+version      '0.0.2'
 source       'http://github.com/myoung34/puppet-marklogic'
 author       'Marcus Young'
 license      'GPLv3+'
