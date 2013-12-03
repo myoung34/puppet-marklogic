@@ -133,43 +133,61 @@ class marklogic::activator (
 
   } else {
 
-    # TODO: set exec for ML6 upgrade (from 6.x to 6.y)
-    exec { 'enter_marklogic_license_info':
-      command     => $license_cmd,
-      notify      => Exec['restart_ML_after_license'],
-      refreshonly => true,
-    }
+    if $is_upgrade {
+      exec { 'restart_ML_after_upgrade':
+        command     => '/sbin/service MarkLogic restart',
+        notify      => Exec['accept_upgrade_license'],
+        path        => $::path,
+      }
 
-    exec { 'restart_ML_after_license':
-      command     => '/sbin/service MarkLogic restart',
-      notify      => Exec['accept_license'],
-      path        => $::path,
-      refreshonly => true,
-    }
+      exec { 'accept_upgrade_license':
+        command     => "/bin/sleep 2 && ${accept_cmd}",
+        notify      => Exec['upgrade_ML_databases'],
+        refreshonly => true,
+      }
 
-    exec { 'accept_license':
-      command     => "/bin/sleep 2 && ${accept_cmd}",
-      notify      => Exec['initialize_marklogic'],
-      refreshonly => true,
-    }
+      exec { 'upgrade_ML_databases':
+        command     => $security_upgrade_cmd,
+        refreshonly => true,
+      }
 
-    exec { 'initialize_marklogic':
-      command     => $initialize_cmd,
-      notify      => Exec['restart_ML_after_init'],
-      refreshonly => true,
-    }
+    } else {
+      exec { 'enter_marklogic_license_info':
+        command     => $license_cmd,
+        notify      => Exec['restart_ML_after_license'],
+        refreshonly => true,
+      }
 
-    exec { 'restart_ML_after_init':
-      command     => '/sbin/service MarkLogic restart',
-      notify      => Exec['install_marklogic_security'],
-      path        => $::path,
-      refreshonly => true,
-    }
+      exec { 'restart_ML_after_license':
+        command     => '/sbin/service MarkLogic restart',
+        notify      => Exec['accept_license'],
+        path        => $::path,
+        refreshonly => true,
+      }
 
-    exec { 'install_marklogic_security':
-      command     => "/bin/sleep 2 && ${security_cmd}",
-      refreshonly => true,
-    }
+      exec { 'accept_license':
+        command     => "/bin/sleep 2 && ${accept_cmd}",
+        notify      => Exec['initialize_marklogic'],
+        refreshonly => true,
+      }
 
+      exec { 'initialize_marklogic':
+        command     => $initialize_cmd,
+        notify      => Exec['restart_ML_after_init'],
+        refreshonly => true,
+      }
+
+      exec { 'restart_ML_after_init':
+        command     => '/sbin/service MarkLogic restart',
+        notify      => Exec['install_marklogic_security'],
+        path        => $::path,
+        refreshonly => true,
+      }
+
+      exec { 'install_marklogic_security':
+        command     => "/bin/sleep 2 && ${security_cmd}",
+        refreshonly => true,
+      }
+    }
   }
 }

@@ -19,13 +19,18 @@ Supported Versions (tested)
         * 6.0-4
         * 7.0-1
     * MarkLogic Upgrades 
-        * 6.0-1.1 *to* 7.0-1
-        * 6.0-4 *to* 7.0-1
+        * 6.0.1.1 *to* 6.0.2.3
+        * 6.0.1.1 *to* 6.0.4
+        * 6.0.1.1 *to* 7.0-1
+        * 6.0.2.3 *to* 6.0.4
+        * 6.0.2.3 *to* 7.0-1
+        * 6.0.4 *to* 7.0-1
 
 Prerequisites
 =============
 
 1. Yum repository with MarkLogic RPMs available (The EULA does not allow redistribution)
+1. Valid license information
 
 Quick Start
 ===========
@@ -95,12 +100,25 @@ If you wish to run the tests:
         bundle install
         bundle exec rake
         
-* Run the system tests
+* Run the system install tests individually
 
-        bundle exec rake RSPEC_SET=centos-64-x64-ml-6011-yum spec:system
-        bundle exec rake RSPEC_SET=centos-64-x64-ml-6023-yum spec:system
-        bundle exec rake RSPEC_SET=centos-64-x64-ml-604-yum spec:system
-        bundle exec rake RSPEC_SET=centos-64-x64-ml-701-yum spec:system
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6011-yum spec:system
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6023-yum spec:system
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-604-yum spec:system
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-701-yum spec:system
         
+* Run the system upgrade tests individually
+
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6011-6023-yum spec:system
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6011-604-yum spec:system
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6011-701-yum spec:system
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6023-604-yum spec:system
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6023-701-yum spec:system
+        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-604-701-yum spec:system
+
+* Run every. single. test.
+
+        $ for i in `cat .nodeset.yml | shyaml get-value sets| grep -E '^[a-zA-Z]' | sed 's/://g'`; do echo $i; bundle exec rake RSPEC_SET=$i spec:system | grep -A 1 -E '^Finished in'; done
+
 * Running without upgrade tests
   * Remove ```nextVersion: '...'``` from the node you want to test
