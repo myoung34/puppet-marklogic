@@ -51,12 +51,6 @@ class marklogic::activator (
   $license_key,
   $version,
 ) {
-  if ($version =~ /^7/) {
-    $is_marklogic_version_7 = true
-  } else {
-    $is_marklogic_version_7 = false
-  }
-
   package { 'wget':
     ensure => installed,
   }
@@ -77,117 +71,112 @@ class marklogic::activator (
     $license_type = 'evaluation'
   }
 
-  $accept_cmd = "${wget} ${http_auth} \"${server_url}/agree-go.xqy?accepted-agreement=${license_type}&ok.x=32&ok.y=17&ok=accept\" > /dev/null"
-  $initialize_cmd = "${wget} ${http_auth} \"${server_url}/initialize-go.xqy\" > /dev/null 2>&1"
-  $join_cmd = "${wget} \"${server_url}/join-admin-go.xqy?new-server=${::fqdn}&new-server-port=8001&bind=7999&connect=7999&server=&port=8001&cancel=cancel&ssl-certificate=${ssl}\" > /dev/null"
-  $license_cmd = "${wget} ${http_auth} \"${server_url}/license-go.xqy?licensee=${licensee}&license-key=${license_key}&ok=ok\" > /dev/null"
-  $security_cmd = "${wget} ${http_auth} \"${server_url}/security-install-go.xqy?user=${admin_user}&password1=${admin_password}&password2=${admin_password}&realm=public\" > /dev/null"
-  $security_upgrade_cmd = "${wget} ${http_auth} \"${server_url}/security-upgrade-go.xqy?ok=ok&ok.x=18&ok.y=17\" > /dev/null"
+  # The only difference between activation on versions of MarkLogic at this
+  # time is the order of execution steps, and which executions are made. To
+  # improve readability, each Exec is disabled by default and has an 'on'
+  # switch, or boolean tied to it. This allows you to choose which Exec must
+  # happen, and chain the order.
+  $accept_cmd = $::should_accept_license ? {
+    true    => "${wget} ${http_auth} \"${server_url}/agree-go.xqy?accepted-agreement=${license_type}&ok.x=32&ok.y=17&ok=accept\" > /dev/null",
+    default => 'echo noop > /dev/null',
+  }
+  $initialize_cmd = $::should_initialize ? {
+    true    => "${wget} ${http_auth} \"${server_url}/initialize-go.xqy\" > /dev/null 2>&1",
+    default => 'echo noop > /dev/null',
+  }
+  $join_cmd = $::should_join ? {
+    true    => "${wget} \"${server_url}/join-admin-go.xqy?new-server=${::fqdn}&new-server-port=8001&bind=7999&connect=7999&server=&port=8001&cancel=cancel&ssl-certificate=${ssl}\" > /dev/null",
+    default => 'echo noop > /dev/null'
+  }
+  $license_cmd = $::should_enter_license ? {
+    true    => "${wget} ${http_auth} \"${server_url}/license-go.xqy?licensee=${licensee}&license-key=${license_key}&ok=ok\" > /dev/null",
+    default => 'echo noop > /dev/null',
+  }
+  $security_cmd = $::should_install_security ? {
+    true    => "${wget} ${http_auth} \"${server_url}/security-install-go.xqy?user=${admin_user}&password1=${admin_password}&password2=${admin_password}&realm=public\" > /dev/null",
+    default => 'echo noop > /dev/null',
+  }
+  $security_upgrade_cmd = $::should_upgrade_security ? {
+    true    => "${wget} ${http_auth} \"${server_url}/security-upgrade-go.xqy?ok=ok&ok.x=18&ok.y=17\" > /dev/null",
+    default => 'echo noop > /dev/null',
+  }
+  $restart_service_cmd = $::should_restart_service ? {
+    true    => '/sbin/service MarkLogic restart',
+    default => 'echo noop > /dev/null',
+  }
+  exec { 'sleep':
+    command     => '/bin/sleep 3',
+    path        => $::path,
+    refreshonly => true,
+    subscribe   => Service['MarkLogic'],
+  }
+  exec { 'upgrade_databases':
+    command     => $security_upgrade_cmd,
+    path        => $::path,
+    refreshonly => true,
+  }
+  exec { 'initialize':
+    command     => $initialize_cmd,
+    path        => $::path,
+    refreshonly => true,
+  }
+  exec { 'join_cluster':
+    command     => $join_cmd,
+    path        => $::path,
+    refreshonly => true,
+  }
+  exec { 'install_security_db':
+    command     => $security_cmd,
+    path        => $::path,
+    refreshonly => true,
+  }
+  exec { 'enter_license':
+    command     => $license_cmd,
+    path        => $::path,
+    refreshonly => true,
+  }
+  exec { 'accept_license':
+    command     => $accept_cmd,
+    path        => $::path,
+    refreshonly => true,
+  }
+  exec {'manually_restart_service':
+    command     => $restart_service_cmd,
+    path        => $::path,
+    refreshonly => true,
+  }
 
-  if $is_marklogic_version_7 {
+
+
+  if ($version =~ /^7/) {
     if $is_upgrade {
+      $should_upgrade_security = true
 
-      exec { 'upgrade_ML7_databases':
-        command     => $security_upgrade_cmd,
-        notify      => Exec['restart_ML7_after_upgrade'],
-        refreshonly => true,
-      }
-
-      exec { 'restart_ML7_after_upgrade':
-        command     => '/sbin/service MarkLogic restart',
-        path        => $::path,
-        refreshonly => true,
-      }
+      Exec['upgrade_databases'] -> Service['MarkLogic']
     } else {
+      $should_initialize = true
+      $should_join = true
+      $should_enter_license = true
+      $should_install_security = true
 
-      exec { 'initialize_marklogic_7':
-        command     => "/bin/sleep 4 && ${initialize_cmd}",
-        notify      => Exec['restart_ML7_after_init'],
-        refreshonly => true,
-      }
-
-      exec { 'restart_ML7_after_init':
-        command     => '/sbin/service MarkLogic restart',
-        notify      => Exec['join_marklogic_cluster'],
-        path        => $::path,
-        refreshonly => true,
-      }
-
-      exec { 'join_marklogic_cluster':
-        command     => "/bin/sleep 2 && ${join_cmd}",
-        notify      => Exec['install_marklogic_security'],
-        refreshonly => true,
-      }
-
-      exec { 'install_marklogic_security':
-        command     => $security_cmd,
-        notify      => Exec['enter_marklogic_license_info'],
-        refreshonly => true,
-      }
-
-      exec { 'enter_marklogic_license_info':
-        command     => $license_cmd,
-        refreshonly => true,
-      }
+      Exec['initialize'] -> Service['MarkLogic'] -> Exec['join_cluster'] -> Exec['install_security_db'] -> Exec['enter_license']
     }
+  } elsif ($version =~ /^6/) {
+    if $is_upgrade {
+      $should_enter_license = true
+      $should_upgrade_security = true
 
+      Service['MarkLogic'] ->  Exec['accept_license'] -> Exec['upgrade_databases']
+    } else {
+      # The service needs to be restarted mid-run. Making a call to Service['MarkLogic'] causes a cycle chain if used twice in one chain.
+      $should_enter_license = true
+      $should_accept_license = true
+      $should_initialize = true
+      $should_install_security = true
+
+      Exec['enter_license'] -> Exec['manually_restart_service'] -> Exec['accept_license'] -> Exec['initialize'] -> Service['MarkLogic'] -> Exec['install_security_db']
+    }
   } else {
-
-    if $is_upgrade {
-      exec { 'restart_ML_after_upgrade':
-        command     => '/sbin/service MarkLogic restart',
-        notify      => Exec['accept_upgrade_license'],
-        path        => $::path,
-      }
-
-      exec { 'accept_upgrade_license':
-        command     => "/bin/sleep 2 && ${accept_cmd}",
-        notify      => Exec['upgrade_ML_databases'],
-        refreshonly => true,
-      }
-
-      exec { 'upgrade_ML_databases':
-        command     => $security_upgrade_cmd,
-        refreshonly => true,
-      }
-
-    } else {
-      exec { 'enter_marklogic_license_info':
-        command     => $license_cmd,
-        notify      => Exec['restart_ML_after_license'],
-        refreshonly => true,
-      }
-
-      exec { 'restart_ML_after_license':
-        command     => '/sbin/service MarkLogic restart',
-        notify      => Exec['accept_license'],
-        path        => $::path,
-        refreshonly => true,
-      }
-
-      exec { 'accept_license':
-        command     => "/bin/sleep 2 && ${accept_cmd}",
-        notify      => Exec['initialize_marklogic'],
-        refreshonly => true,
-      }
-
-      exec { 'initialize_marklogic':
-        command     => $initialize_cmd,
-        notify      => Exec['restart_ML_after_init'],
-        refreshonly => true,
-      }
-
-      exec { 'restart_ML_after_init':
-        command     => '/sbin/service MarkLogic restart',
-        notify      => Exec['install_marklogic_security'],
-        path        => $::path,
-        refreshonly => true,
-      }
-
-      exec { 'install_marklogic_security':
-        command     => "/bin/sleep 2 && ${security_cmd}",
-        refreshonly => true,
-      }
-    }
+    fail()
   }
 }
