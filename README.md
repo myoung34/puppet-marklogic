@@ -122,3 +122,7 @@ If you wish to run the tests:
 
 * Running without upgrade tests
   * Remove ```nextVersion: '...'``` from the node you want to test
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/myoung34/puppet-marklogic/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
