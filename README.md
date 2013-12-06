@@ -1,6 +1,6 @@
 puppet-marklogic
 ================
-![Build Status](https://travis-ci.org/myoung34/puppet-marklogic.png?branch=master,dev)
+![Build Status](https://travis-ci.org/myoung34/puppet-marklogic.png?branch=master,dev)&nbsp;[![Code Climate](https://codeclimate.com/github/myoung34/puppet-marklogic.png)](https://codeclimate.com/github/myoung34/puppet-marklogic)&nbsp;[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/myoung34/puppet-marklogic/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Puppet Module For Marklogic
 
@@ -122,3 +122,5 @@ If you wish to run the tests:
 
 * Running without upgrade tests
   * Remove ```nextVersion: '...'``` from the node you want to test
+
+
