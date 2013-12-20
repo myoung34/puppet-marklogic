@@ -21,6 +21,13 @@ sets:
         options:
           marklogicVersion: '6.0-1.1'
           nextVersion: '6.0-4'
+  'centos-64-x64-ml-6011-6041-yum':
+    nodes:
+      "main.foo.vm":
+        prefab: 'centos-64-x64-ml-yum'
+        options:
+          marklogicVersion: '6.0-1.1'
+          nextVersion: '6.0-4.1'
   'centos-64-x64-ml-6011-701-yum':
     nodes:
       "main.foo.vm":
@@ -41,6 +48,13 @@ sets:
         options:
           marklogicVersion: '6.0-2.3'
           nextVersion: '6.0-4'
+  'centos-64-x64-ml-6023-6041-yum':
+    nodes:
+      "main.foo.vm":
+        prefab: 'centos-64-x64-ml-yum'
+        options:
+          marklogicVersion: '6.0-2.3'
+          nextVersion: '6.0-4.1'
   'centos-64-x64-ml-6023-701-yum':
     nodes:
       "main.foo.vm":
@@ -54,12 +68,32 @@ sets:
         prefab: 'centos-64-x64-ml-yum'
         options:
           marklogicVersion: '6.0-4'
+  'centos-64-x64-ml-604-6041-yum':
+    nodes:
+      "main.foo.vm":
+        prefab: 'centos-64-x64-ml-yum'
+        options:
+          marklogicVersion: '6.0-4'
+          nextVersion: '6.0-4.1'
   'centos-64-x64-ml-604-701-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
           marklogicVersion: '6.0-4'
+          nextVersion: '7.0-1'
+  'centos-64-x64-ml-6041-yum':
+    nodes:
+      "main.foo.vm":
+        prefab: 'centos-64-x64-ml-yum'
+        options:
+          marklogicVersion: '6.0-4.1'
+  'centos-64-x64-ml-6041-701-yum':
+    nodes:
+      "main.foo.vm":
+        prefab: 'centos-64-x64-ml-yum'
+        options:
+          marklogicVersion: '6.0-4.1'
           nextVersion: '7.0-1'
   'centos-64-x64-ml-701-yum':
     nodes:
