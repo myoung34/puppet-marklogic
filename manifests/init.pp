@@ -47,6 +47,7 @@
 class marklogic (
   $admin_user             = 'admin',
   $admin_password         = 'admin',
+  $disable_ec2_detection  = false,
   $is_development_license = false,
   $is_upgrade             = false,
   $licensee,
@@ -55,7 +56,8 @@ class marklogic (
 ) {
 
   class { 'marklogic':
-    version       => $version,
+    version               => $version,
+    disable_ec2_detection => $disable_ec2_detection,
   }
 
   class { 'marklogic::activator':
@@ -67,5 +69,4 @@ class marklogic (
     license_key            => $license_key,
     version                => $version,
   }
-
 }

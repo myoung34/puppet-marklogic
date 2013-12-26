@@ -9,6 +9,11 @@ About
 
 [MarkLogic](http://www.marklogic.com) is an Enterprise level NoSQL XML database driven to big data. It supports Windows, OSX, and RHEL/CentOS distributions, while this module is aimed at CentOS only (untested on RHEL).
 
+Known AWS Issues
+=================
+
+[See this for a detailed explanation](https://github.com/myoung34/puppet-marklogic/wiki/Permanent-AWS-Issue)
+
 Supported Versions (tested)
 =================
 ## OS ##
@@ -49,6 +54,7 @@ Quick Start
         class { 'marklogic':
           admin_user             => 'admin', #defaults to admin
           admin_password         => 'admin', #defaults to admin
+          disable_ec2_detection  => true,    #defaults to false
           is_development_license => true,    #defaults to false
           is_upgrade             => false,   #defaults to false
           licensee               => 'myname',#required
@@ -59,13 +65,15 @@ Quick Start
 Hiera
 =====
 
-    marklogic::marklogic::version:        '6.0-4'
-    marklogic::activator::admin_password: 'admin'
-    marklogic::activator::admin_user:     'admin'
-    marklogic::activator::is_upgrade:     false
-    marklogic::activator::licensee:       'my licensee'
-    marklogic::activator::license_key:    'my key'
-    marklogic::activator::version:        '6.0-4'
+    marklogic::marklogic::version:                '6.0-4'
+    marklogic::marklogic::disable_ec2_detection:  true
+    marklogic::activator::admin_password:         'admin'
+    marklogic::activator::admin_user:             'admin'
+    marklogic::activator::is_development_license: true
+    marklogic::activator::is_upgrade:             false
+    marklogic::activator::licensee:               'my licensee'
+    marklogic::activator::license_key:            'my key'
+    marklogic::activator::version:                '6.0-4'
     
 Testing
 =====
@@ -127,5 +135,3 @@ If you wish to run the tests:
 
 * Running without upgrade tests
   * Remove ```nextVersion: '...'``` from the node you want to test
-
-

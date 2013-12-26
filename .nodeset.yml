@@ -6,98 +6,98 @@ sets:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-1.1'
+          marklogic_version: '6.0-1.1'
   'centos-64-x64-ml-6011-6023-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-1.1'
-          nextVersion: '6.0-2.3'
+          marklogic_version: '6.0-1.1'
+          next_version: '6.0-2.3'
   'centos-64-x64-ml-6011-604-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-1.1'
-          nextVersion: '6.0-4'
+          marklogic_version: '6.0-1.1'
+          next_version: '6.0-4'
   'centos-64-x64-ml-6011-6041-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-1.1'
-          nextVersion: '6.0-4.1'
+          marklogic_version: '6.0-1.1'
+          next_version: '6.0-4.1'
   'centos-64-x64-ml-6011-701-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-1.1'
-          nextVersion: '7.0-1'
+          marklogic_version: '6.0-1.1'
+          next_version: '7.0-1'
   'centos-64-x64-ml-6023-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-2.3'
+          marklogic_version: '6.0-2.3'
   'centos-64-x64-ml-6023-604-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-2.3'
-          nextVersion: '6.0-4'
+          marklogic_version: '6.0-2.3'
+          next_version: '6.0-4'
   'centos-64-x64-ml-6023-6041-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-2.3'
-          nextVersion: '6.0-4.1'
+          marklogic_version: '6.0-2.3'
+          next_version: '6.0-4.1'
   'centos-64-x64-ml-6023-701-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-2.3'
-          nextVersion: '7.0-1'
+          marklogic_version: '6.0-2.3'
+          next_version: '7.0-1'
   'centos-64-x64-ml-604-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-4'
+          marklogic_version: '6.0-4'
   'centos-64-x64-ml-604-6041-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-4'
-          nextVersion: '6.0-4.1'
+          marklogic_version: '6.0-4'
+          next_version: '6.0-4.1'
   'centos-64-x64-ml-604-701-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-4'
-          nextVersion: '7.0-1'
+          marklogic_version: '6.0-4'
+          next_version: '7.0-1'
   'centos-64-x64-ml-6041-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-4.1'
+          marklogic_version: '6.0-4.1'
   'centos-64-x64-ml-6041-701-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '6.0-4.1'
-          nextVersion: '7.0-1'
+          marklogic_version: '6.0-4.1'
+          next_version: '7.0-1'
   'centos-64-x64-ml-701-yum':
     nodes:
       "main.foo.vm":
         prefab: 'centos-64-x64-ml-yum'
         options:
-          marklogicVersion: '7.0-1'
+          marklogic_version: '7.0-1'

@@ -10,6 +10,8 @@ describe 'marklogic' do
   let(:title) { 'marklogic' }
 
   it { should contain_service('MarkLogic') }
+  it { should_not contain_exec('fubar ML6 ec2 detection') }
+  it { should_not contain_file('/bin/is-ec2.sh') }
 
   it { should contain_exec('accept_license') }
   it { should contain_exec('enter_license') }
