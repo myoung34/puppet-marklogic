@@ -1,6 +1,6 @@
 puppet-marklogic
 ================
-![Build Status](https://travis-ci.org/myoung34/puppet-marklogic.png?branch=master,dev)&nbsp;[![Code Climate](https://codeclimate.com/github/myoung34/puppet-marklogic.png)](https://codeclimate.com/github/myoung34/puppet-marklogic)&nbsp;[![Coverage Status](https://coveralls.io/repos/myoung34/puppet-marklogic/badge.png)](https://coveralls.io/r/myoung34/puppet-marklogic)&nbsp;[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/myoung34/puppet-marklogic/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+![Build Status](https://travis-ci.org/myoung34/puppet-marklogic.png?branch=master,dev)&nbsp;[![Coverage Status](https://coveralls.io/repos/myoung34/puppet-marklogic/badge.png)](https://coveralls.io/r/myoung34/puppet-marklogic)&nbsp;[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/myoung34/puppet-marklogic/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Puppet Module For Marklogic
 
@@ -65,15 +65,14 @@ Quick Start
 Hiera
 =====
 
-    marklogic::marklogic::version:                '6.0-4'
-    marklogic::marklogic::disable_ec2_detection:  true
-    marklogic::activator::admin_password:         'admin'
-    marklogic::activator::admin_user:             'admin'
-    marklogic::activator::is_development_license: true
-    marklogic::activator::is_upgrade:             false
-    marklogic::activator::licensee:               'my licensee'
-    marklogic::activator::license_key:            'my key'
-    marklogic::activator::version:                '6.0-4'
+    marklogic::admin_password:         'admin'
+    marklogic::admin_user:             'admin'
+    marklogic::disable_ec2_detection:  true
+    marklogic::is_development_license: true
+    marklogic::is_upgrade:             false
+    marklogic::licensee:               'my licensee'
+    marklogic::license_key:            'my key'
+    marklogic::version:                '6.0-4'
     
 Testing
 =====
