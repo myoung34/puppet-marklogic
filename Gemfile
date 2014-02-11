@@ -11,4 +11,5 @@ group :rake do
   gem 'rspec-system-puppet',     :git => 'https://github.com/puppetlabs/rspec-system-puppet.git'
   gem 'rspec-system-serverspec', :git => 'https://github.com/puppetlabs/rspec-system-serverspec.git'
   gem 'serverspec'            
+  gem 'yarjuf'
 end

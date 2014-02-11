@@ -113,6 +113,9 @@ GEM
     thor (0.18.1)
     tins (0.13.1)
     trollop (2.0)
+    yarjuf (1.0.5)
+      builder
+      rspec (>= 2.0)
 
 PLATFORMS
   ruby
@@ -128,3 +131,4 @@ DEPENDENCIES
   rspec-system-puppet!
   rspec-system-serverspec!
   serverspec
+  yarjuf
