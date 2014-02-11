@@ -11,5 +11,5 @@ describe 'marklogic' do
   let(:title) { 'marklogic' }
 
   it { should_not contain_exec('fubar ML6 ec2 detection') }
-  it { should contain_file('/bin/is-ec2.sh') }
+  it { should contain_file('/bin/is-ec2.sh').with_replace('false') }
 end
