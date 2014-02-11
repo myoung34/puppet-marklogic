@@ -68,6 +68,7 @@ class marklogic::marklogic (
         before      => Exec['restart ML'],
         command     => 'sed -i.bak "s/\/proc\/xen/\/proc\/fake/g" /etc/sysconfig/MarkLogic',
         path        => $::path,
+        refreshonly => true,
         subscribe   => Package['MarkLogic'],
       }
     } elsif ($version =~ /^7/) {
@@ -84,6 +85,7 @@ class marklogic::marklogic (
         before  => Package['MarkLogic'],
         content => template('marklogic/is-ec2.sh.erb'),
         mode    => '0700',
+        replace => false,
       }
     } else {
       fail()
