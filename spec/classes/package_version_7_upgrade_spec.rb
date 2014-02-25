@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe 'marklogic' do
   let(:params) {{ 
-    :disable_ec2_detection => true,
-    :licensee              => 'My Company',
-    :license_key           => 'foo-bar',
-    :version               => '7.0-1',
+    :is_upgrade  => true,
+    :licensee    => 'My Company',
+    :license_key => 'foo-bar',
+    :version     => '7.0-1',
   }}
 
   let(:title) { 'marklogic' }
@@ -13,22 +13,18 @@ describe 'marklogic' do
   it { should have_class_count(4) }
   it { should_not contain_class('Class[marklogic::version::6::install]') }
   it { should_not contain_class('Class[marklogic::version::6::upgrade]') }
-  it { should contain_class('Class[marklogic::version::7::install]') }
-  it { should_not contain_class('Class[marklogic::version::7::upgrade]') }
-
-  it { should_not contain_exec('fubar ML6 ec2 detection') }
-  it { should contain_file('/bin/is-ec2.sh').with_replace('false') }
+  it { should_not contain_class('Class[marklogic::version::7::install]') }
+  it { should contain_class('Class[marklogic::version::7::upgrade]') }
 
   it { should contain_service('MarkLogic') }
+  it { should_not contain_exec('fubar ML6 ec2 detection') }
+  it { should_not contain_file('/bin/is-ec2.sh') }
 
   it { should contain_exec('restart ML') }
 
-  it { should contain_exec('initialize').that_subscribes_to('Package[MarkLogic]').that_notifies('Exec[manually_restart_service]') }
-  it { should contain_exec('manually_restart_service').that_notifies('Exec[join_cluster]') }
-  it { should contain_exec('join_cluster').that_notifies('Exec[install_security_db]') }
-  it { should contain_exec('install_security_db').that_notifies('Exec[enter_license]') }
-  it { should contain_exec('enter_license') }
-  it { should have_exec_resource_count(6) }
+  it { should contain_exec('upgrade_databases').that_subscribes_to('Package[MarkLogic]').that_notifies('Exec[manually_restart_service]') }
+  it { should contain_exec('manually_restart_service') }
+  it { should have_exec_resource_count(3) }
 
   it { should contain_package('MarkLogic') }
   it { should contain_package('gdb').with_ensure('present') }
