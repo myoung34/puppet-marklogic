@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'marklogic' do
   let(:params) {{ 
+    :is_upgrade  => true,
     :licensee    => 'My Company',
     :license_key => 'foo-bar',
     :version     => '6.0-4',
@@ -14,14 +15,9 @@ describe 'marklogic' do
   it { should_not contain_file('/bin/is-ec2.sh') }
 
   it { should contain_exec('accept_license') }
-  it { should contain_exec('enter_license') }
-  it { should contain_exec('initialize') }
-  it { should contain_exec('install_security_db') }
-  it { should contain_exec('join_cluster') }
+  it { should contain_exec('upgrade_databases') }
   it { should contain_exec('manually_restart_service') }
   it { should contain_exec('restart ML') }
-  it { should contain_exec('sleep') }
-  it { should contain_exec('upgrade_databases') }
 
   it { should contain_package('MarkLogic') }
   it { should contain_package('gdb').with_ensure('present') }
@@ -35,5 +31,4 @@ describe 'marklogic' do
     'port'   => [ 8000, 8001, 8002 ],
     'proto'  => 'tcp'
   )}
-
 end

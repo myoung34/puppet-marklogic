@@ -76,105 +76,25 @@ class marklogic::activator (
   # improve readability, each Exec is disabled by default and has an 'on'
   # switch, or boolean tied to it. This allows you to choose which Exec must
   # happen, and chain the order.
-  $accept_cmd = $::should_accept_license ? {
-    true    => "${wget} ${http_auth} \"${server_url}/agree-go.xqy?accepted-agreement=${license_type}&ok.x=32&ok.y=17&ok=accept\" > /dev/null",
-    default => 'echo noop > /dev/null',
-  }
-  $initialize_cmd = $::should_initialize ? {
-    true    => "${wget} ${http_auth} \"${server_url}/initialize-go.xqy\" > /dev/null 2>&1",
-    default => 'echo noop > /dev/null',
-  }
-  $join_cmd = $::should_join ? {
-    true    => "${wget} \"${server_url}/join-admin-go.xqy?new-server=${::fqdn}&new-server-port=8001&bind=7999&connect=7999&server=&port=8001&cancel=cancel&ssl-certificate=${ssl}\" > /dev/null",
-    default => 'echo noop > /dev/null'
-  }
-  $license_cmd = $::should_enter_license ? {
-    true    => "${wget} ${http_auth} \"${server_url}/license-go.xqy?licensee=${licensee}&license-key=${license_key}&ok=ok\" > /dev/null",
-    default => 'echo noop > /dev/null',
-  }
-  $security_cmd = $::should_install_security ? {
-    true    => "${wget} ${http_auth} \"${server_url}/security-install-go.xqy?user=${admin_user}&password1=${admin_password}&password2=${admin_password}&realm=public\" > /dev/null",
-    default => 'echo noop > /dev/null',
-  }
-  $security_upgrade_cmd = $::should_upgrade_security ? {
-    true    => "${wget} ${http_auth} \"${server_url}/security-upgrade-go.xqy?ok=ok&ok.x=18&ok.y=17\" > /dev/null",
-    default => 'echo noop > /dev/null',
-  }
-  $restart_service_cmd = $::should_restart_service ? {
-    true    => '/sbin/service MarkLogic restart',
-    default => 'echo noop > /dev/null',
-  }
-  exec { 'sleep':
-    command     => '/bin/sleep 3',
-    path        => $::path,
-    refreshonly => true,
-    subscribe   => Service['MarkLogic'],
-  }
-  exec { 'upgrade_databases':
-    command     => $security_upgrade_cmd,
-    path        => $::path,
-    refreshonly => true,
-  }
-  exec { 'initialize':
-    command     => $initialize_cmd,
-    path        => $::path,
-    refreshonly => true,
-  }
-  exec { 'join_cluster':
-    command     => $join_cmd,
-    path        => $::path,
-    refreshonly => true,
-  }
-  exec { 'install_security_db':
-    command     => $security_cmd,
-    path        => $::path,
-    refreshonly => true,
-  }
-  exec { 'enter_license':
-    command     => $license_cmd,
-    path        => $::path,
-    refreshonly => true,
-  }
-  exec { 'accept_license':
-    command     => $accept_cmd,
-    path        => $::path,
-    refreshonly => true,
-  }
-  exec {'manually_restart_service':
-    command     => $restart_service_cmd,
-    path        => $::path,
-    refreshonly => true,
-  }
-
-
+  $accept_cmd = "${wget} ${http_auth} \"${server_url}/agree-go.xqy?accepted-agreement=${license_type}&ok.x=32&ok.y=17&ok=accept\" > /dev/null"
+  $initialize_cmd = "${wget} ${http_auth} \"${server_url}/initialize-go.xqy\" > /dev/null 2>&1"
+  $join_cmd = "${wget} \"${server_url}/join-admin-go.xqy?new-server=${::fqdn}&new-server-port=8001&bind=7999&connect=7999&server=&port=8001&cancel=cancel&ssl-certificate=${ssl}\" > /dev/null"
+  $license_cmd = "${wget} ${http_auth} \"${server_url}/license-go.xqy?licensee=${licensee}&license-key=${license_key}&ok=ok\" > /dev/null"
+  $security_cmd = "${wget} ${http_auth} \"${server_url}/security-install-go.xqy?user=${admin_user}&password1=${admin_password}&password2=${admin_password}&realm=public\" > /dev/null"
+  $security_upgrade_cmd = "${wget} ${http_auth} \"${server_url}/security-upgrade-go.xqy?ok=ok&ok.x=18&ok.y=17\" > /dev/null"
+  $restart_service_cmd = '/sbin/service MarkLogic restart'
 
   if ($version =~ /^7/) {
     if $is_upgrade {
-      $should_upgrade_security = true
-
-      Exec['upgrade_databases'] -> Service['MarkLogic']
+      include marklogic::version::7::upgrade
     } else {
-      $should_initialize = true
-      $should_join = true
-      $should_enter_license = true
-      $should_install_security = true
-
-      Exec['initialize'] -> Service['MarkLogic'] -> Exec['join_cluster'] -> Exec['install_security_db'] -> Exec['enter_license']
+      include marklogic::version::7::install
     }
   } elsif ($version =~ /^6/) {
     if $is_upgrade {
-      $should_enter_license = true
-      $should_upgrade_security = true
-
-      Service['MarkLogic'] ->  Exec['accept_license'] -> Exec['upgrade_databases']
+      include marklogic::version::6::upgrade
     } else {
-      # The service needs to be restarted mid-run. Making a call to Service['MarkLogic'] causes a cycle chain if used twice in one chain.
-      $should_enter_license = true
-      $should_accept_license = true
-      $should_initialize = true
-      $should_install_security = true
-
-      Exec['enter_license'] -> Exec['manually_restart_service'] -> Exec['accept_license'] -> Exec['initialize'] -> Service['MarkLogic'] -> Exec['install_security_db']
+      include marklogic::version::6::install
     }
   } else {
     fail()
