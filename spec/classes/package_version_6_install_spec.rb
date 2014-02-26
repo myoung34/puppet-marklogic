@@ -2,10 +2,9 @@ require 'spec_helper'
 
 describe 'marklogic' do
   let(:params) {{ 
-    :disable_ec2_detection => true,
-    :licensee              => 'My Company',
-    :license_key           => 'foo-bar',
-    :version               => '6.0-4',
+    :licensee    => 'My Company',
+    :license_key => 'foo-bar',
+    :version     => '6.0-4',
   }}
 
   let(:title) { 'marklogic' }
@@ -16,10 +15,9 @@ describe 'marklogic' do
   it { should_not contain_class('Class[marklogic::version::7::install]') }
   it { should_not contain_class('Class[marklogic::version::7::upgrade]') }
 
-  it { should contain_exec('fubar ML6 ec2 detection').with_refreshonly('true') }
-  it { should_not contain_file('/bin/is-ec2.sh') }
-
   it { should contain_service('MarkLogic') }
+  it { should_not contain_exec('fubar ML6 ec2 detection') }
+  it { should_not contain_file('/bin/is-ec2.sh') }
 
   it { should contain_exec('restart ML') }
 
@@ -29,7 +27,7 @@ describe 'marklogic' do
   it { should contain_exec('initialize').that_notifies('Exec[manually_restart_service_again]') }
   it { should contain_exec('manually_restart_service_again').that_notifies('Exec[install_security_db]') }
   it { should contain_exec('install_security_db') }
-  it { should have_exec_resource_count(8) }
+  it { should have_exec_resource_count(7) }
 
   it { should contain_package('MarkLogic') }
   it { should contain_package('gdb').with_ensure('present') }
