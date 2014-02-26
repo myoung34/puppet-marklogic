@@ -91,21 +91,24 @@ If you wish to run the tests:
 
 * Create a matching Vagrant box
 
-        vagrant box add centos64 http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box
-        vagrant init
-        vagrant ssh
-        sudo mkdir /usr/share/marklogic && sudo chmod 777 /usr/share/marklogic -R
-        exit
-        # scp -P 2222 -r ~/rpms/marklogic/*.rpm vagrant@localhost:/usr/share/marklogic/ #put your RPMs into the vm
-        vagrant ssh
-        sudo yum install -y createrepo
-        cd /usr/share/marklogic && createrepo .
-        sudo su -
-        echo $'[marklogic]\nname=MarkLogic CentOS-$releasever\nbaseurl=file:///usr/share/marklogic/\ngpgcheck=0\nenabled=1' > /etc/yum.repos.d/marklogic.repo
-        sudo rm -f /etc/udev/rules.d/70-persistent-net.rules # see: https://github.com/mitchellh/vagrant/issues/921
-        exit
-        vagrant package --output CentOS_64_x86-64_MarkLogic_YUM.box
-        vagrant box add centos-64-x64-ml-yum CentOS_64_x86-64_MarkLogic_YUM.box
+         vagrant box add base http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box
+         vagrant init
+         vagrant up
+         vagrant ssh 
+         sudo mkdir /usr/share/marklogic && sudo chmod 777 /usr/share/marklogic -R
+         exit
+         # scp -P 2222 -r ~/rpms/marklogic/*.rpm vagrant@localhost:/usr/share/marklogic/ #put your RPMs into the vm
+         vagrant ssh 
+         sudo yum install -y createrepo
+         cd /usr/share/marklogic && createrepo .
+         sudo su -
+         echo $'[marklogic]\nname=MarkLogic CentOS-$releasever\nbaseurl=file:///usr/share/marklogic/\ngpgcheck=0\nenabled=1' > /etc/yum.repos.d/marklogic.repo
+         rm -f /etc/sysconfig/network-scripts/ifcfg-eth1
+         rm -f /etc/udev/rules.d/70-persistent-net.rules # see: https://github.com/mitchellh/vagrant/issues/921
+         exit
+         exit
+         vagrant package --output CentOS_64_x86-64_MarkLogic_YUM.box
+         vagrant box add centos-64-x64-ml-yum CentOS_64_x86-64_MarkLogic_YUM.box
 
 * Run the default tests (puppet + lint)
 
