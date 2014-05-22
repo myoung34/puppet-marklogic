@@ -4,3 +4,5 @@ pkg/
 spec/fixtures/
 .rspec_system/
 coverage/
+/.vagrant/
+/log/
