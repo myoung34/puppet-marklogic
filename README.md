@@ -77,63 +77,14 @@ Hiera
 Testing
 =====
 
-Due to licensing issues, I cannot distribute the base Vagrant .box that contains the Yum repo.
-
-Also due to licensing, I cannot distribute the required license information to get the tests to run.
-
-If you wish to run the tests:
-
-* create the file **~/.marklogic.yml** which contains:
-
-        licensee: 'my licensee info'
-        license_key: 'my key'
-        is_development_license: true
-
-* Create a matching Vagrant box
-
-         vagrant box add base http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box
-         vagrant init
-         vagrant up
-         vagrant ssh 
-         sudo mkdir /usr/share/marklogic && sudo chmod 777 /usr/share/marklogic -R
-         exit
-         # scp -P 2222 -r ~/rpms/marklogic/*.rpm vagrant@localhost:/usr/share/marklogic/ #put your RPMs into the vm
-         vagrant ssh 
-         sudo yum install -y createrepo
-         cd /usr/share/marklogic && createrepo .
-         sudo su -
-         echo $'[marklogic]\nname=MarkLogic CentOS-$releasever\nbaseurl=file:///usr/share/marklogic/\ngpgcheck=0\nenabled=1' > /etc/yum.repos.d/marklogic.repo
-         rm -f /etc/sysconfig/network-scripts/ifcfg-eth1
-         rm -f /etc/udev/rules.d/70-persistent-net.rules # see: https://github.com/mitchellh/vagrant/issues/921
-         exit
-         exit
-         vagrant package --output CentOS_64_x86-64_MarkLogic_YUM.box
-         vagrant box add centos-64-x64-ml-yum CentOS_64_x86-64_MarkLogic_YUM.box
-
 * Run the default tests (puppet + lint)
 
         bundle install
         bundle exec rake
         
-* Run the system install tests individually
+* Run the [beaker](https://github.com/puppetlabs/beaker) acceptance tests
 
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6011-yum spec:system
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6023-yum spec:system
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-604-yum spec:system
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-701-yum spec:system
-        
-* Run the system upgrade tests individually
+Due to licensing issues, I cannot distribute the MarkLogic RPMs, or obviously my license information.
+Also, due to the way beaker works, each spec file needs to run independently.
 
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6011-6023-yum spec:system
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6011-604-yum spec:system
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6011-701-yum spec:system
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6023-604-yum spec:system
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-6023-701-yum spec:system
-        $ bundle exec rake RSPEC_SET=centos-64-x64-ml-604-701-yum spec:system
-
-* Run every. single. test.
-
-        $ for i in `cat .nodeset.yml | shyaml get-value sets| grep -E '^[a-zA-Z]' | sed 's/://g'`; do echo $i; bundle exec rake RSPEC_SET=$i spec:system | grep -A 1 -E '^Finished in'; done
-
-* Running without upgrade tests
-  * Remove ```nextVersion: '...'``` from the node you want to test
+        $ for i in `ls spec/acceptance/*_spec.rb`; do echo $i; MARKLOGIC_YUM_URL=http://my.foo.com/yum/ MARKLOGIC_LICENSEE="my licensee" MARKLOGIC_KEY="1-2-3-4" bundle exec rspec $i | grep -A 150 Destroying\ vagrant\ boxes; done
