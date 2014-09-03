@@ -57,6 +57,7 @@ class marklogic::activator (
 
   service { 'MarkLogic':
     ensure => 'running',
+    enable => true,
   }
 
   $http_auth = "--user=${admin_user} --password=${admin_password} "
