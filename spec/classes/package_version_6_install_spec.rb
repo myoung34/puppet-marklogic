@@ -15,7 +15,7 @@ describe 'marklogic' do
   it { should_not contain_class('Class[marklogic::version::7::install]') }
   it { should_not contain_class('Class[marklogic::version::7::upgrade]') }
 
-  it { should contain_service('MarkLogic') }
+  it { should contain_service('MarkLogic').with_ensure('running').with_enable('true') }
   it { should_not contain_exec('fubar ML6 ec2 detection') }
   it { should_not contain_file('/bin/is-ec2.sh') }
 
