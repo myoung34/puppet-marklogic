@@ -1,6 +1,9 @@
 puppet-marklogic
 ================
-![Build Status](https://travis-ci.org/myoung34/puppet-marklogic.png?branch=master,dev)&nbsp;[![Coverage Status](https://coveralls.io/repos/myoung34/puppet-marklogic/badge.png)](https://coveralls.io/r/myoung34/puppet-marklogic)&nbsp;[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/myoung34/puppet-marklogic/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+![Build Status](https://travis-ci.org/myoung34/puppet-marklogic.png?branch=master,dev)&nbsp;
+[![Coverage Status](https://coveralls.io/repos/myoung34/puppet-marklogic/badge.png)](https://coveralls.io/r/myoung34/puppet-marklogic)&nbsp;
+[![Puppet Forge](https://img.shields.io/puppetforge/v/myoung34/marklogic.svg)](https://forge.puppetlabs.com/myoung34/marklogic)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/myoung34/puppet-marklogic/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Puppet Module For Marklogic
 
@@ -19,12 +22,12 @@ Supported Versions (tested)
 ## OS ##
 * CentOS 6
     * MarkLogic Base install (MarkLogic not pre-installed)
-        * 6.0-1.1 
-        * 6.0-2.3 
+        * 6.0-1.1
+        * 6.0-2.3
         * 6.0-4
         * 6.0-4.1
         * 7.0-1
-    * MarkLogic Upgrades 
+    * MarkLogic Upgrades
         * 6.0.1.1 *to* 6.0.2.3
         * 6.0.1.1 *to* 6.0.4
         * 6.0.1.1 *to* 6.0.4.1
@@ -73,7 +76,7 @@ Hiera
     marklogic::licensee:               'my licensee'
     marklogic::license_key:            'my key'
     marklogic::version:                '6.0-4'
-    
+
 Testing
 =====
 
@@ -81,7 +84,7 @@ Testing
 
         bundle install
         bundle exec rake
-        
+
 * Run the [beaker](https://github.com/puppetlabs/beaker) acceptance tests
 
 Due to licensing issues, I cannot distribute the MarkLogic RPMs, or obviously my license information.
